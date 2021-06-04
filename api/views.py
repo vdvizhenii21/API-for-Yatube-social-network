@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, filters
-from .models import Post, Group, Follow
+from .models import Post, Group
 from .serializers import (
     PostSerializer,
     CommentSerializer,
@@ -51,11 +51,11 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class FollowViewSet(viewsets.ModelViewSet):
-    queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = [filters.SearchFilter]
     search_fields = ['user__username']
+    http_method_names = ['get', 'post']
 
     def get_queryset(self):
         return self.request.user.following
@@ -68,3 +68,4 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (IsAuthorOrReadOnly,)
+    http_method_names = ['get', 'post']
